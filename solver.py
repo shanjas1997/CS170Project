@@ -80,10 +80,10 @@ def solve(P, M, N, C, items, constraints):
     methods.append(lambda x: prices.get(i.c, (i.buy - i.sell)) * x.sell / max(0.0001, x.buy) / max(1, len(incompatabilities.get(x.c, [])))) #sell / buy
     methods.append(lambda x: prices.get(i.c, (i.buy - i.sell)) * ((x.sell - x.buy) / max(1, len(incompatabilities.get(x.c, []))))) #(sell - buy / weight)
     methods.append(lambda x: prices.get(i.c, (i.buy - i.sell)) * (x.sell / max(1, len(incompatabilities.get(x.c, [])))))
+    for _ in range(100):
     ma = float('-inf')
     greedies = []
     stuff = items
-    for _ in range(10):
         for me in methods:
             # print "HI"
             stuff.sort(key = me, reverse = True)
@@ -92,7 +92,7 @@ def solve(P, M, N, C, items, constraints):
                 ma = res[0]
                 greedies = res[1]
         solutions.append((ma,greedies))
-    print len(greedies)
+    print ma
     "Here we will run Random Sampling"
     r = np.random.choice(items, 50, replace = False)
 
@@ -137,7 +137,10 @@ def write_output(filename, items_chosen):
         for i in items_chosen:
             f.write(i.name)
             f.write("\n")
-
+def write_output2(ma):
+    with open("score1.out", "w") as f:
+        f.write("PROJECT")
+        f.write(ma)
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="PickItems solver.")

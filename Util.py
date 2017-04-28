@@ -19,7 +19,7 @@ def greedy(items, constraints, P, M, IBC, mean, stdev, method): #conduct the gre
 		i = it.pop(0)
 		rn = random.random()
 		if (i.c not in invalids and not (i.buy > mo or i.weight > lb)):
-			if (rn < .95):
+			if (rn < .90):
 				cl = i.c
 				lb -= i.weight
 				mo -= i.buy
