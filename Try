@@ -1,0 +1,44 @@
+#!/bin/bash
+echo Problem1
+python solver.py project_instances/problem1.in Output/problem1.out
+echo Problem2
+python solver.py project_instances/problem2.in Output/problem2.out
+echo Problem3
+python solver.py project_instances/problem3.in Output/problem3.out
+echo Problem4
+python solver.py project_instances/problem4.in Output/problem4.out
+echo Problem5
+python solver.py project_instances/problem5.in Output/problem5.out
+echo Problem6
+python solver.py project_instances/problem6.in Output/problem6.out
+echo Problem7
+python solver.py project_instances/problem7.in Output/problem7.out
+echo Problem8
+python solver.py project_instances/problem8.in Output/problem8.out
+echo Problem9
+python solver.py project_instances/problem9.in Output/problem9.out
+echo Problem10
+python solver.py project_instances/problem10.in Output/problem10.out
+echo Problem11
+python solver.py project_instances/problem11.in Output/problem11.out
+echo Problem12
+python solver.py project_instances/problem12.in Output/problem12.out
+echo Problem13
+python solver.py project_instances/problem13.in Output/problem13.out
+echo Problem14
+python solver.py project_instances/problem14.in Output/problem14.out
+echo Problem15
+python solver.py project_instances/problem15.in Output/problem15.out
+echo Problem16
+python solver.py project_instances/problem16.in Output/problem16.out
+echo Problem17
+python solver.py project_instances/problem17.in Output/problem17.out
+echo Problem18
+python solver.py project_instances/problem18.in Output/problem18.out
+echo Problem19
+python solver.py project_instances/problem19.in Output/problem19.out
+echo Problem20
+python solver.py project_instances/problem20.in Output/problem20.out
+echo Problem21
+python solver.py project_instances/problem21.in Output/problem21.out
+
