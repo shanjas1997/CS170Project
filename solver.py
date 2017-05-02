@@ -22,19 +22,11 @@ def solve(P, M, N, C, items, constraints):
     """
     """Here I will do the greedy algorithm. My algorithm will be done in the form that I will take the max of using 6 different sorting methods.
     First, let us make an incompatability dictionary to make things easier to look at"""
-    # print "HIII"
-    # M = Model("PLEASE LET THIS SHIT WORK")
-    # M.addvar("x")
-    # M.addconstr("")
-    # M.setObj()
     incompatabilities = {}
-    # count = 0
     for constraint in constraints:
-        #print count
-        # count += 1
         for c in constraint:
             if c not in incompatabilities:
-                incompatabilities[c] = constraint
+                incompatabilities[c] = set(constraint)
             else:
                 incompatabilities[c].update(constraint)
             
@@ -42,34 +34,17 @@ def solve(P, M, N, C, items, constraints):
     for c in incompatabilities:
         l = list(incompatabilities[c])
         l.remove(c)
-        incompatabilities[c] = l
-    # a = list(incompatabilities[170])
-    # a.sort()
-    # print a
-    # print "OTHER"
-    # b = list(incompatabilities[632])
-    # b.sort()
-    # print b
-    # print "HELLO?"
+        incompatabilities[c] = set(l)
     "finished making our incompatability list"
 
     """Pre-Processing"""
-    # # print len(items)
-    # STD_VALS = []
-    # for i in items:
-    #     STD_VALS.append(i.eff/max(0.00001, len(incompatabilities.get(i.c, [1]))))
-    # stdev = np.std(STD_VALS)    
-    # mean = np.mean(STD_VALS)
-    # threshold = (mean - 1.6 * stdev)
-    # y = [i for i in items if ((i.eff/max(0.00001, len(incompatabilities.get(i.c, [1])))) > threshold and i.sell > i.buy)]
-    # items = y[:]
     prices = {}
     ibc = {}
     for i in items:
-        if i.c not in prices:
-            prices[i.c] = (i.sell - i.buy)
-        else:
-            prices[i.c] = prices[i.c] + (i.sell - i.buy)
+        # if i.c not in prices:
+        #     prices[i.c] = (i.sell - i.buy)
+        # else:
+        #     prices[i.c] = prices[i.c] + (i.sell - i.buy)
         if i.c not in ibc:
             ibc[i.c] = [i]
         else:
@@ -79,87 +54,27 @@ def solve(P, M, N, C, items, constraints):
     "We will store all our greedy stuff as tuples, to see what is best."
     solutions = []
     methods = []
-    # methods.append(lambda x: prices.get(x.c, (x.buy - x.sell)) * x.sell / max(0.0001, x.buy) / (0.2 * max(1, len(incompatabilities.get(x.c, []))))) #sell / buy
-    # methods.append(lambda x: prices.get(x.c, (x.buy - x.sell)) *((x.sell - x.buy) / max(0.0001, x.weight) / (0.2 * max(1, len(incompatabilities.get(x.c, [])))))) #(sell - buy / weight)
-    # methods.append(lambda x: prices.get(x.c, (i.buy - x.sell))* (x.sell / max(0.0001, (x.weight * x.buy)) / (0.2 * max(1, len(incompatabilities.get(x.c, []))))))
-    # methods.append(lambda x: prices.get(x.c, (i.buy - x.sell))* (x.sell/ max(0.0001, (x.buy + x.weight)) / (0.2 * max(1, len(incompatabilities.get(x.c, [])))))) #(sell / (buy + weight))
-    # methods.append(lambda x: prices.get(x.c, (i.buy - x.sell))* x.sell / max(0.0001, x.weight) / (0.2 * max(1, len(incompatabilities.get(x.c, []))))) #sell / weight
-    # # methods.append(lambda x: x.sell / max(0.0001, x.buy) / (0.6 * max(1, len(incompatabilities.get(x.c, []))))) #sell / buy
-    # # methods.append(lambda x: ((x.sell - x.buy) / max(0.0001, x.weight) / (0.6 * max(1, len(incompatabilities.get(x.c, [])))))) #(sell - buy / weight)
-    # # methods.append(lambda x: (x.sell / max(0.0001, (x.weight * x.buy)) / (0.6 * max(1, len(incompatabilities.get(x.c, []))))))
-    # # methods.append(lambda x: (x.sell/ max(0.0001, (x.buy + x.weight)) / (0.6 * max(1, len(incompatabilities.get(x.c, [])))))) #(sell / (buy + weight))
-    # # methods.append(lambda x: x.sell / max(0.0001, x.weight) / (0.6 * max(1, len(incompatabilities.get(x.c, []))))) #sell / weight
-    # methods.append(lambda x: prices.get(x.c, (x.buy - x.sell)) * x.sell / max(0.0001, x.buy) / max(1, len(incompatabilities.get(x.c, [])))) #sell / buy
-    # methods.append(lambda x: prices.get(x.c, (x.buy - x.sell)) * ((x.sell - x.buy) / max(1, len(incompatabilities.get(x.c, []))))) #(sell - buy / weight)
-    # methods.append(lambda x: prices.get(x.c, (x.buy - x.sell)) * (x.sell / max(1, len(incompatabilities.get(x.c, [])))))
+    methods.append(lambda x: x.sell / max(0.0001, x.buy))
+    methods.append(lambda x: ((x.sell - x.buy) / max(0.0001, x.weight))) #(sell - buy / weight)
+    methods.append(lambda x: (x.sell / max(0.0001, (x.weight * x.buy))))
+    methods.append(lambda x: (x.sell/ max(0.0001, (x.buy + x.weight)))) #(sell / (buy + weight))
+    methods.append(lambda x: x.sell / max(0.0001, x.weight))
+    methods.append(lambda x: x.sell / max(0.0001, x.buy))
+    methods.append(lambda x: ((x.sell - x.buy)))
+    methods.append(lambda x: x.sell)
+    methods.append(lambda x: (x.sell - x.buy)/ math.pow(max(x.weight, 0.0001) /P, 2))
+    methods.append(lambda x: ((x.sell - x.buy)/ (max(x.weight, 0.0001) / P) * (x.sell/ math.pow(max(0.0001, x.weight), 2))))
+    methods.append(lambda x: (x.sell / (max(x.weight, 0.0001) / P)) + (x.sell / (max(x.buy , 0.0001) / M)))
 
-    methods.append(lambda x: x.sell / max(0.0001, x.buy) / (0.2 * max(1, len(incompatabilities.get(x.c, []))))) #sell / buy
-    methods.append(lambda x: ((x.sell - x.buy) / max(0.0001, x.weight) / (0.2 * max(1, len(incompatabilities.get(x.c, [])))))) #(sell - buy / weight)
-    methods.append(lambda x: (x.sell / max(0.0001, (x.weight * x.buy)) / (0.2 * max(1, len(incompatabilities.get(x.c, []))))))
-    methods.append(lambda x: (x.sell/ max(0.0001, (x.buy + x.weight)) / (0.2 * max(1, len(incompatabilities.get(x.c, [])))))) #(sell / (buy + weight))
-    methods.append(lambda x: x.sell / max(0.0001, x.weight) / (0.2 * max(1, len(incompatabilities.get(x.c, []))))) #sell / weight
-    # methods.append(lambda x: x.sell / max(0.0001, x.buy) / (0.6 * max(1, len(incompatabilities.get(x.c, []))))) #sell / buy
-    # methods.append(lambda x: ((x.sell - x.buy) / max(0.0001, x.weight) / (0.6 * max(1, len(incompatabilities.get(x.c, [])))))) #(sell - buy / weight)
-    # methods.append(lambda x: (x.sell / max(0.0001, (x.weight * x.buy)) / (0.6 * max(1, len(incompatabilities.get(x.c, []))))))
-    # methods.append(lambda x: (x.sell/ max(0.0001, (x.buy + x.weight)) / (0.6 * max(1, len(incompatabilities.get(x.c, [])))))) #(sell / (buy + weight))
-    # methods.append(lambda x: x.sell / max(0.0001, x.weight) / (0.6 * max(1, len(incompatabilities.get(x.c, []))))) #sell / weight
-    methods.append(lambda x: x.sell / max(0.0001, x.buy) / max(1, len(incompatabilities.get(x.c, [])))) #sell / buy
-    methods.append(lambda x: ((x.sell - x.buy) / max(1, len(incompatabilities.get(x.c, []))))) #(sell - buy / weight)
-    methods.append(lambda x: (x.sell / max(1, len(incompatabilities.get(x.c, [])))))
-    #DHRUV"S STUFF
-    # methods.append((lambda x: ((x.sell - x.buy) / math.pow(max(0.0001, x.weight), 2))))
-    # methods.append(lambda x: x.sell)
-    # methods.append(lambda x: math.pow(x.sell, 2) / max(0.0001, x.weight))
-    # methods.append(lambda x: math.pow((x.sell - x.buy), 2)/ max(0.0001, x.weight))
-    # methods.append(lambda x: math.pow((x.sell - x.buy), 2)/ (max(x.weight, 0.0001)/ P))
-    # methods.append(lambda x: (x.sell - x.buy) / (max(x.weight, 0.0001) / P))
-    # methods.append(lambda x: (x.sell - x.buy)/ math.pow(max(x.weight, 0.0001) /P, 2))
-    # methods.append(lambda x: ((x.sell - x.buy)/ (max(x.weight, 0.0001) / P) * (x.sell/ math.pow(max(0.0001, x.weight), 2))))
-    # methods.append(lambda x: (x.sell / (max(x.buy, 0.0001) / M)))
-    # methods.append(lambda x: (x.sell) / ((max(x.weight , 0.0001) / P) * (max(x.buy, 0.0001) / M)))
-    # methods.append(lambda x: (x.sell / (max(x.weight, 0.0001) / P)) + (x.sell / (max(x.buy , 0.0001) / M)))
-    # print len(methods)
-    # ma = float('-inf')
-    # stuff = items
-    for i in range(200):
+    for i in range(20):
         # print i
         stuff = items
         for me in methods:
-        # me = methods[0]
             solutions.append(Util.greed_by_classes(stuff, incompatabilities, P, M, ibc, me))
-    # greedies = []
-    # counter = 0
-    # for me in methods:
-    #     counter += 1
-    #     print (counter)
-    #     # print len(methods)
-    #     # print ("PUSH")
-    #     stuff.sort(key = me, reverse = True)
-    #     res = Util.greedy(stuff, incompatabilities, P, M, ibc, mean, stdev, me)
-    #     print res[0]
-    #     if (res[0] > ma):
-    #         ma = res[0]
-    #         greedies = res[1]
-    # solutions.append((ma,greedies))
-    # ma = float('-inf')
-    # greedies = []
-    # for me in methods:
-    #     # print "HI"
-    #     stuff.sort(key = me, reverse = True)
-    #     res = Util.simple_greedy(stuff, incompatabilities, P, M, ibc, mean, stdev, me)
-    #     print res[0]
-    #     if (res[0] > ma):
-    #         ma = res[0]
-    #         greedies = res[1]
-    # solutions.append((ma,greedies))    
-    # # print (ma)
-    # "Here we will run Random Sampling"
-    # r = np.random.choice(items, 50, replace = False)
-
-
-    # "Dynamic Programming. (So help me God)"
-    # mP = sum(i.sell for i in items)
-    # i = Util.separateByClass(items)
+    stuff = items
+    for me in methods:
+        stuff.sort(key = me, reverse = True)
+        solutions.append(Util.simple_greedy(stuff,incompatabilities, P, M))
     print max(solutions, key = lambda x: x[0])[0]
     return max(solutions, key= lambda x: x[0])[1]
 
