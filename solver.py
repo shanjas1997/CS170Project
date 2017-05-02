@@ -107,29 +107,33 @@ def solve(P, M, N, C, items, constraints):
     methods.append(lambda x: ((x.sell - x.buy) / max(1, len(incompatabilities.get(x.c, []))))) #(sell - buy / weight)
     methods.append(lambda x: (x.sell / max(1, len(incompatabilities.get(x.c, [])))))
     #DHRUV"S STUFF
-    methods.append(lambda x: methods.append(lambda x: ((x.sell - x.buy) / math.pow(max(0.0001, x.weight), 2))))
+    methods.append((lambda x: ((x.sell - x.buy) / math.pow(max(0.0001, x.weight), 2))))
     methods.append(lambda x: x.sell)
     methods.append(lambda x: math.pow(x.sell, 2) / max(0.0001, x.weight))
     methods.append(lambda x: math.pow((x.sell - x.buy), 2)/ max(0.0001, x.weight))
     methods.append(lambda x: math.pow((x.sell - x.buy), 2)/ (max(x.weight, 0.0001)/ P))
     methods.append(lambda x: (x.sell - x.buy) / (max(x.weight, 0.0001) / P))
-    methods.append(lambda x: (x.sell - x.buy)/ math.pow((x.weight * P), 2))
+    methods.append(lambda x: (x.sell - x.buy)/ math.pow(max(x.weight, 0.0001) /P, 2))
     methods.append(lambda x: ((x.sell - x.buy)/ (max(x.weight, 0.0001) / P) * (x.sell/ math.pow(max(0.0001, x.weight), 2))))
     methods.append(lambda x: (x.sell / (max(x.buy, 0.0001) / M)))
     methods.append(lambda x: (x.sell) / ((max(x.weight , 0.0001) / P) * (max(x.buy, 0.0001) / M)))
     methods.append(lambda x: (x.sell / (max(x.weight, 0.0001) / P)) + (x.sell / (max(x.buy , 0.0001) / M)))
+    # print len(methods)
     ma = float('-inf')
     greedies = []
     stuff = items
-    for _ in range(1):
-        for me in methods:
-            # print "HI"
-            stuff.sort(key = me, reverse = True)
-            res = Util.greedy(stuff, incompatabilities, P, M, ibc, mean, stdev, me)
-            if (res[0] > ma):
-                ma = res[0]
-                greedies = res[1]
-        solutions.append((ma,greedies))
+    counter = 0
+    for me in methods:
+        # counter += 1
+        # print (counter)
+        # print len(methods)
+        # print ("PUSH")
+        stuff.sort(key = me, reverse = True)
+        res = Util.greedy(stuff, incompatabilities, P, M, ibc, mean, stdev, me)
+        if (res[0] > ma):
+            ma = res[0]
+            greedies = res[1]
+    solutions.append((ma,greedies))
     ma = float('-inf')
     greedies = []
     for me in methods:
