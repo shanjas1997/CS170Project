@@ -111,11 +111,13 @@ def solve(P, M, N, C, items, constraints):
     methods.append(lambda x: x.sell)
     methods.append(lambda x: math.pow(x.sell, 2) / max(0.0001, x.weight))
     methods.append(lambda x: math.pow((x.sell - x.buy), 2)/ max(0.0001, x.weight))
-    methods.append(lambda x: math.pow((x.sell - x.buy), 2)/ max(x.weight, 0.0001)/ P)
-    methods.append(lambda x: (x.sell - x.buy) / max(x.weight, 0.0001) / P)
+    methods.append(lambda x: math.pow((x.sell - x.buy), 2)/ (max(x.weight, 0.0001)/ P))
+    methods.append(lambda x: (x.sell - x.buy) / (max(x.weight, 0.0001) / P))
     methods.append(lambda x: (x.sell - x.buy)/ math.pow((x.weight * P), 2))
-    methods.append(lambda x: ((x.sell - x.buy)/ max(x.weight, 0.0001) / P * (x.sell/ math.pow(max(0.0001, x.weight), 2))))
-    methods.append(lambda x: (x.sell / max(x.buy, 0.0001) / P))
+    methods.append(lambda x: ((x.sell - x.buy)/ (max(x.weight, 0.0001) / P) * (x.sell/ math.pow(max(0.0001, x.weight), 2))))
+    methods.append(lambda x: (x.sell / (max(x.buy, 0.0001) / M)))
+    methods.append(lambda x: (x.sell) / ((max(x.weight , 0.0001) / P) * (max(x.buy, 0.0001) / M)))
+    methods.append(lambda x: (x.sell / (max(x.weight, 0.0001) / P)) + (x.sell / (max(x.buy , 0.0001) / M)))
     ma = float('-inf')
     greedies = []
     stuff = items
