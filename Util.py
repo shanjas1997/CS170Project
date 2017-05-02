@@ -40,13 +40,13 @@ def greedy(items, constraints, P, M, IBC, mean, stdev, method): #conduct the gre
 					invalids.update(constraints[cl])
 				i_list.append(i)
 	results.append((val, list(set(i_list))))
-	invalids = set()
-	it = items[1:]
-	i_list = []
-	# IB = copy.deepcopy(IBC)
-	val = 0
-	lb = P
-	mo = M
+	# invalids = set()
+	# it = items[1:]
+	# i_list = []
+	# # IB = copy.deepcopy(IBC)
+	# val = 0
+	# lb = P
+	# mo = M
 	# print "RUN"
 	# while (len(it) != 0):
 	# 	i = it.pop(0)
@@ -109,6 +109,32 @@ def prune(items, constraints, P, M):
 			update.append(i)
 	# print len(items)
 	return update
+def simple_greedy(items, constraints, P, M, IBC, mean, stdev, method):
+	results = []
+	i_list = []
+	val = 0
+	lb = P
+	mo = M
+	md = mean - stdev
+	invalids = set()
+	it = items[:]
+	same = IBC
+	# print len(it)
+	le = len(items)
+	# print "RUN"
+	# print "TRY"
+	while (len(it) != 0):
+		i = it.pop(0)
+		if (i.c not in invalids and not (i.buy > mo or i.weight > lb)):
+			cl = i.c
+			lb -= i.weight
+			mo -= i.buy
+			val += i.sell
+			if cl in constraints:
+				invalids.update(constraints[cl])
+			i_list.append(i)
+	results.append((val, list(set(i_list))))
+	return max(results, key = lambda x: x[0])
 def separateByClass(items):
 	itemsByClass = {}
 	for i in items:

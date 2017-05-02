@@ -5,6 +5,7 @@ import argparse
 from Item import Item
 import Util
 import numpy as np
+import math
 # import gurobipy as gp
 # from pulp import *
 """
@@ -105,10 +106,20 @@ def solve(P, M, N, C, items, constraints):
     methods.append(lambda x: x.sell / max(0.0001, x.buy) / max(1, len(incompatabilities.get(x.c, [])))) #sell / buy
     methods.append(lambda x: ((x.sell - x.buy) / max(1, len(incompatabilities.get(x.c, []))))) #(sell - buy / weight)
     methods.append(lambda x: (x.sell / max(1, len(incompatabilities.get(x.c, [])))))
+    #DHRUV"S STUFF
+    methods.append(lambda x: methods.append(lambda x: ((x.sell - x.buy) / math.pow(max(0.0001, x.weight), 2))))
+    methods.append(lambda x: x.sell)
+    methods.append(lambda x: math.pow(x.sell, 2) / max(0.0001, x.weight))
+    methods.append(lambda x: math.pow((x.sell - x.buy), 2)/ max(0.0001, x.weight))
+    methods.append(lambda x: math.pow((x.sell - x.buy), 2)/ max(x.weight, 0.0001)/ P)
+    methods.append(lambda x: (x.sell - x.buy) / max(x.weight, 0.0001) / P)
+    methods.append(lambda x: (x.sell - x.buy)/ math.pow((x.weight * P), 2))
+    methods.append(lambda x: ((x.sell - x.buy)/ max(x.weight, 0.0001) / P * (x.sell/ math.pow(max(0.0001, x.weight), 2))))
+    methods.append(lambda x: (x.sell / max(x.buy, 0.0001) / P))
     ma = float('-inf')
     greedies = []
     stuff = items
-    for _ in range(25):
+    for _ in range(1):
         for me in methods:
             # print "HI"
             stuff.sort(key = me, reverse = True)
@@ -117,6 +128,16 @@ def solve(P, M, N, C, items, constraints):
                 ma = res[0]
                 greedies = res[1]
         solutions.append((ma,greedies))
+    ma = float('-inf')
+    greedies = []
+    for me in methods:
+        # print "HI"
+        stuff.sort(key = me, reverse = True)
+        res = Util.simple_greedy(stuff, incompatabilities, P, M, ibc, mean, stdev, me)
+        if (res[0] > ma):
+            ma = res[0]
+            greedies = res[1]
+    solutions.append((ma,greedies))    
     print (ma)
     "Here we will run Random Sampling"
     r = np.random.choice(items, 50, replace = False)
