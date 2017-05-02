@@ -124,8 +124,8 @@ def solve(P, M, N, C, items, constraints):
     stuff = items
     counter = 0
     for me in methods:
-        # counter += 1
-        # print (counter)
+        counter += 1
+        print (counter)
         # print len(methods)
         # print ("PUSH")
         stuff.sort(key = me, reverse = True)
