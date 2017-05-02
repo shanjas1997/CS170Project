@@ -66,7 +66,7 @@ def solve(P, M, N, C, items, constraints):
     methods.append(lambda x: ((x.sell - x.buy)/ (max(x.weight, 0.0001) / P) * (x.sell/ math.pow(max(0.0001, x.weight), 2))))
     methods.append(lambda x: (x.sell / (max(x.weight, 0.0001) / P)) + (x.sell / (max(x.buy , 0.0001) / M)))
 
-    for i in range(50):
+    for i in range(25):
         # print i
         stuff = items
         for me in methods:
