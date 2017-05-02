@@ -13,4 +13,5 @@ CS170 GargSack WriteUp}
    \item Randomize classes, and then pick our classes in such a way so that we do not break runtime constraints. We will run this many times to try to, by chance, get the most-optimal set we can. Once we get this set, we know that nothing in this set will conflict in terms of classes, so we can run a simple greedy on this.
    \item Run greedy algorithm based on our multiple sorting heuristics, that involve some subset of weight, cost, resell, class, etc.
 \end{itemize}
+\indent Our reasoning is this. Primarily, we will use the first case, and we will run that randomized case between 20-200 times. The purpose of this is that we want to, by chance, be able to select some assortment of classes such that we will find some optimal set. But there could exist a case where we fail to do so, and that is where our simple-random solution comes into play. 
 \end{document}
