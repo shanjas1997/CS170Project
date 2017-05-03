@@ -35,6 +35,7 @@ def solve(P, M, N, C, items, constraints):
         l = list(incompatabilities[c])
         l.remove(c)
         incompatabilities[c] = set(l)
+    print "done"
     "finished making our incompatability list"
 
     """Pre-Processing"""
@@ -49,7 +50,7 @@ def solve(P, M, N, C, items, constraints):
             ibc[i.c] = [i]
         else:
             ibc[i.c].append(i)
-
+    print "two"
     # print len(items)
     "We will store all our greedy stuff as tuples, to see what is best."
     solutions = []
@@ -66,12 +67,20 @@ def solve(P, M, N, C, items, constraints):
     methods.append(lambda x: ((x.sell - x.buy)/ (max(x.weight, 0.0001) / P) * (x.sell/ math.pow(max(0.0001, x.weight), 2))))
     methods.append(lambda x: (x.sell / (max(x.weight, 0.0001) / P)) + (x.sell / (max(x.buy , 0.0001) / M)))
 
-    for i in range(25):
-        # print i
+    for i in range(50):
+        print i
         stuff = items
         for me in methods:
             solutions.append(Util.greed_by_classes(stuff, incompatabilities, P, M, ibc, me))
     stuff = items
+    # methods.append(lambda x: x.sell / max(0.0001, x.buy))
+    # methods.append(lambda x: (x.sell/ max(0.0001, (x.buy + x.weight)))) #(sell / (buy + weight))
+    # methods.append(lambda x: x.sell / max(0.0001, x.weight))
+    # methods.append(lambda x: x.sell / max(0.0001, x.buy))
+    # methods.append(lambda x: ((x.sell - x.buy)))
+    # methods.append(lambda x: x.sell)
+    # methods.append(lambda x: (x.sell / (max(x.weight, 0.0001) / P)) + (x.sell / (max(x.buy , 0.0001) / M)))
+
     for me in methods:
         stuff.sort(key = me, reverse = True)
         solutions.append(Util.simple_greedy(stuff,incompatabilities, P, M))

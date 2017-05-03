@@ -7,6 +7,7 @@ def greed_by_classes(items, constraints, P, M, IBC, method):
 	i_list = []
 	random.shuffle(classes)
 	while(len(classes) > 0):
+		print len(classes)
 		cl = classes.pop(0)
 		if cl not in invalids:
 			# print "LEN" +str(len(constraints.get(cl, [])))
